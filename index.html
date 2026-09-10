@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colegio Simón Bolívar Secundaria - Portal Escolar</title>
+    <style>
+        :root {
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --text-primary: #1c1c1e;
+            --text-secondary: #8e8e93;
+            --accent: #003366; /* Azul Marino Institucional */
+            --accent-hover: #002244;
+            --accent-light: #e6edf5;
+            --danger: #ff3b30;
+            --border: #c6c6c8;
+            --radius: 14px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .card, #dashboardView, #authCard {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .school-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin: 0 0 4px 0;
+            color: var(--accent);
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], input[type="password"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #f9f9fb;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            box-sizing: border-box;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 90px;
+        }
+
+        /* Selector de casillas para grupos estilo encuesta */
+        .checkbox-group-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .checkbox-card {
+            background: #f9f9fb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 4px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .checkbox-card input {
+            display: none;
+        }
+
+        .checkbox-card.selected {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Barra superior */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .user-info {
+            font-size: 0.85rem;
+        }
+        .user-info strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--accent);
+        }
+        .user-info span {
+            color: var(--text-secondary);
+            text-transform: capitalize;
+            font-size: 0.8rem;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* Tarjetas de tareas */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-card {
+            background: #f9f9fb;
+            border: 1px solid #e5e5ea;
+            padding: 14px;
+            border-radius: 10px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .task-subject {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .task-date {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .task-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .task-desc {
+            margin: 0;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .alert-success {
+            background-color: #e8f8f0;
+            color: #107c41;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .badge-grupo {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 4px;
+            text-transform: uppercase;
+        }
+
+        .demo-box {
+            background: #f9f9fb;
+            border: 1px dashed var(--border);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 18px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .demo-box b {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ================= VISTA: LOGIN ================= -->
+        <div id="authCard" class="card">
+            <header>
+                <span class="school-badge">Colegio Simón Bolívar Secundaria</span>
+                <h1>Portal Escolar</h1>
+                <p>Inicia sesión con tu cuenta institucional</p>
+            </header>
+
+            <form id="formLogin">
+                <div class="form-group">
+                    <label for="loginUser">Usuario:</label>
+                    <input type="text" id="loginUser" placeholder="ej. alumno.ejemplo" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPass">Contraseña:</label>
+                    <input type="password" id="loginPass" placeholder="ejemplo contraseña" required>
+                </div>
+
+                <!-- Selección de Grado y Grupo para Alumnos -->
+                <div id="studentGroupSelection" class="hidden">
+                    <div class="form-group">
+                        <label for="selectGrado">Grado Escolar:</label>
+                        <select id="selectGrado">
+                            <option value="1">1.º Grado</option>
+                            <option value="2">2.º Grado</option>
+                            <option value="3" selected>3.º Grado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectGrupo">Grupo:</label>
+                        <select id="selectGrupo">
+                            <option value="A">Grupo A</option>
+                            <option value="B">Grupo B</option>
+                            <option value="C">Grupo C</option>
+                            <option value="D">Grupo D</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+
+            <div class="demo-box">
+                <strong>💡 Datos para Demostración:</strong><br>
+                • Alumno: <b>alumno.ejemplo</b> / <b>ejemplo contraseña</b><br>
+                • Profesor: <b>profe.ejemplo</b> / <b>ejemplo contraseña</b>
+            </div>
+        </div>
+
+        <!-- ================= VISTA: PANEL PRINCIPAL ================= -->
+        <div id="dashboardView" class="hidden">
+            
+            <div class="top-bar">
+                <div class="user-info">
+                    <strong id="displayName">Nombre</strong>
+                    <span id="displayRoleGrado">Rol</span>
+                </div>
+                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+            </div>
+
+            <!-- Panel de Profesor para publicar tareas -->
+            <div id="teacherPanel" class="card hidden">
+                <h2>Publicar Asignatura y Tarea</h2>
+                <div id="pubAlert" class="alert-success hidden">Tarea publicada correctamente</div>
+                
+                <form id="formTask">
+                    <div class="form-group">
+                        <label for="taskGrado">Grado Destino:</label>
+                        <select id="taskGrado" required>
+                            <option value="1">1.º Grado</option>
+                            <option value="2">2.º Grado</option>
+                            <option value="3">3.º Grado</option>
+                        </select>
+                    </div>
+
+                    <!-- Casillas de verificación para grupos -->
+                    <div class="form-group">
+                        <label>Grupos Destino:</label>
+                        <div class="checkbox-group-container">
+                            <label class="checkbox-card selected" onclick="toggleCheckboxCard(this)">
+                                <input type="checkbox" name="taskGrupos" value="A" checked> Grupo A
+                            </label>
+                            <label class="checkbox-card selected" onclick="toggleCheckboxCard(this)">
+                                <input type="checkbox" name="taskGrupos" value="B" checked> Grupo B
+                            </label>
+                            <label class="checkbox-card selected" onclick="toggleCheckboxCard(this)">
+                                <input type="checkbox" name="taskGrupos" value="C" checked> Grupo C
+                            </label>
+                            <label class="checkbox-card selected" onclick="toggleCheckboxCard(this)">
+                                <input type="checkbox" name="taskGrupos" value="D" checked> Grupo D
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskSubject">Materia:</label>
+                        <select id="taskSubject" required>
+                            <option value="Matemáticas">Matemáticas</option>
+                            <option value="Español">Español</option>
+                            <option value="Ciencias">Ciencias</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Inglés">Inglés</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskAssignDate">Fecha de Asignación:</label>
+                        <input type="date" id="taskAssignDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDueDate">Fecha Límite:</label>
+                        <input type="date" id="taskDueDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDesc">Tema visto y Tarea:</label>
+                        <textarea id="taskDesc" placeholder="Describe los detalles de la actividad..." required></textarea>
+                    </div>
+                    
+                    <button type="submit">Publicar en el Pizarrón</button>
+                </form>
+            </div>
+
+            <!-- Pizarrón de Tareas -->
+            <div class="card">
+                <h2>
+                    Pizarrón de Actividades
+                    <span style="font-size: 0.75rem; font-weight: 500; color: var(--text-secondary);" id="gradeInfoLabel"></span>
+                </h2>
+                
+                <!-- Buscador de tareas por fecha específica -->
+                <div class="form-group">
+                    <label for="filterDate">Buscar por fecha de asignación:</label>
+                    <div class="search-box">
+                        <input type="date" id="filterDate" onchange="renderTasks()">
+                        <button type="button" onclick="clearDateFilter()" style="width: auto; padding: 0 14px; background: var(--text-secondary);">Ver Todas</button>
+                    </div>
+                </div>
+
+                <div id="taskList" class="task-list">
+                    <!-- Se inyectan dinámicamente -->
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const usersDatabase = {
+            "alumno.ejemplo": { pass: "ejemplo contraseña", name: "Estudiante de Ejemplo", role: "alumno" },
+            "profe.ejemplo": { pass: "ejemplo contraseña", name: "Profr. Carlos Gómez", role: "maestro" }
+        };
+
+        let currentUser = null;
+        let tasks = JSON.parse(localStorage.getItem('csb_tasks_v4')) || [];
+
+        function toggleCheckboxCard(card) {
+            const checkbox = card.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            if (checkbox.checked) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        }
+
+        document.getElementById('loginUser').addEventListener('input', function(e) {
+            const val = e.target.value.trim();
+            const groupSelection = document.getElementById('studentGroupSelection');
+            if (val.startsWith('alumno') || (usersDatabase[val] && usersDatabase[val].role === 'alumno')) {
+                groupSelection.classList.remove('hidden');
+            } else {
+                groupSelection.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('formLogin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userInput = document.getElementById('loginUser').value.trim();
+            const passInput = document.getElementById('loginPass').value.trim();
+
+            const userRecord = usersDatabase[userInput];
+
+            if (!userRecord || userRecord.pass !== passInput) {
+                alert('Usuario o contraseña incorrectos. Verifica los datos de demostración.');
+                return;
+            }
+
+            currentUser = { ...userRecord };
+
+            if (currentUser.role === 'alumno') {
+                currentUser.grado = document.getElementById('selectGrado').value;
+                currentUser.grupo = document.getElementById('selectGrupo').value;
+            }
+
+            document.getElementById('authCard').classList.add('hidden');
+            document.getElementById('dashboardView').classList.remove('hidden');
+
+            document.getElementById('displayName').innerText = currentUser.name;
+            
+            if (currentUser.role === 'maestro') {
+                document.getElementById('displayRoleGrado').innerText = 'Profesor(a)';
+                document.getElementById('teacherPanel').classList.remove('hidden');
+                document.getElementById('gradeInfoLabel').innerText = "Mis Publicaciones";
+            } else {
+                document.getElementById('displayRoleGrado').innerText = `Alumno • ${currentUser.grado}.º Grado Grupo ${currentUser.grupo}`;
+                document.getElementById('teacherPanel').classList.add('hidden');
+                document.getElementById('gradeInfoLabel').innerText = `${currentUser.grado}° ${currentUser.grupo}`;
+            }
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('taskAssignDate').value = todayStr;
+            document.getElementById('taskDueDate').value = todayStr;
+            document.getElementById('filterDate').value = todayStr;
+
+            renderTasks();
+            this.reset();
+        });
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('authCard').classList.remove('hidden');
+        }
+
+        document.getElementById('formTask').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const grado = document.getElementById('taskGrado').value;
+            const checkboxes = document.querySelectorAll('input[name="taskGrupos"]:checked');
+            const gruposSeleccionados = Array.from(checkboxes).map(cb => cb.value);
+
+            if (gruposSeleccionados.length === 0) {
+                alert('Debes seleccionar al menos un grupo de destino para la tarea.');
+                return;
+            }
+
+            const subject = document.getElementById('taskSubject').value;
+            const assignDate = document.getElementById('taskAssignDate').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const description = document.getElementById('taskDesc').value;
+
+            if (dueDate < assignDate) {
+                alert('La fecha límite no puede ser anterior a la fecha de asignación.');
+                return;
+            }
+
+            tasks.push({
+                grado,
+                grupos: gruposSeleccionados,
+                subject,
+                teacher: currentUser.name,
+                assignDate,
+                dueDate,
+                description
+            });
+
+            localStorage.setItem('csb_tasks_v4', JSON.stringify(tasks));
+
+            this.reset();
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('taskAssignDate').value = todayStr;
+            document.getElementById('taskDueDate').value = todayStr;
+            document.querySelectorAll('.checkbox-card').forEach(card => {
+                card.querySelector('input').checked = true;
+                card.classList.add('selected');
+            });
+
+            const alertBox = document.getElementById('pubAlert');
+            alertBox.classList.remove('hidden');
+            setTimeout(() => { alertBox.classList.add('hidden'); }, 3000);
+
+            renderTasks();
+        });
+
+        function clearDateFilter() {
+            document.getElementById('filterDate').value = "";
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            const selectedDate = document.getElementById('filterDate').value;
+            container.innerHTML = "";
+
+            const today = new Date().toISOString().split('T')[0];
+
+            let activeTasks = tasks.filter(t => t.dueDate >= today);
+            localStorage.setItem('csb_tasks_v4', JSON.stringify(activeTasks));
+
+            // Filtro específico según el rol del usuario
+            if (currentUser.role === 'alumno') {
+                // Alumno ve las tareas de su grado y grupo correspondiente
+                activeTasks = activeTasks.filter(t => {
+                    const matchGrado = t.grado === currentUser.grado;
+                    const matchGrupo = t.grupos.includes(currentUser.grupo);
+                    return matchGrado && matchGrupo;
+                });
+            } else if (currentUser.role === 'maestro') {
+                // Profesor solo ve sus propias asignaciones
+                activeTasks = activeTasks.filter(t => t.teacher === currentUser.name);
+            }
+
+            if (selectedDate) {
+                activeTasks = activeTasks.filter(t => t.assignDate === selectedDate);
+            }
+
+            if (activeTasks.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin: 20px 0;">No hay actividades registradas para esta selección y fecha.</p>`;
+                return;
+            }
+
+            [...activeTasks].reverse().forEach(task => {
+                const card = document.createElement('div');
+                card.className = 'task-card';
+                
+                let gruposTexto = task.grupos.join(', ');
+                const destinoTexto = `${task.grado}.º Grado (Grupos: ${gruposTexto})`;
+                
+                card.innerHTML = `
+                    <div class="task-header">
+                        <span class="task-subject">${task.subject} <span class="badge-grupo">${destinoTexto}</span></span>
+                        <span class="task-date">Entrega: ${task.dueDate}</span>
+                    </div>
+                    <div class="task-meta">Asignado el: ${task.assignDate} • Por: ${task.teacher}</div>
+                    <p class="task-desc">${task.description}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
